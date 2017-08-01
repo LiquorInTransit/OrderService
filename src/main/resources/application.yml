@@ -1,0 +1,61 @@
+server:
+  port: 0
+ # servlet:
+ #   contextPath: /accounts
+ # use-forward-headers: false
+
+
+spring:
+  profiles:
+    active: test
+  datasource:
+    name: test
+    url: jdbc:hsqldb:mem:test://localhost/test
+    username:
+    password: 
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.HSQLDialect
+    hibernate:
+      ddl-auto: none
+
+
+---
+  
+eureka:
+  instance:
+    hostname: localhost
+    port: 8761
+  client:
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:${eureka.instance.port}/eureka
+   
+spring:
+ # data:
+  #  rest:
+   #   basePath: /v1
+  datasource:
+    url: jdbc:mysql://localhost:3306/LIT?characterEncoding=UTF-8
+    username: root
+    password: $LIT2016$
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+      format_sql: true
+    show_sql: true
+    hibernate:
+      ddl-auto: update
+      
+security:
+  oauth2:
+    resource:
+      filter-order: 3
+      userInfoUri: http://localhost:8080/uaa/user #uaa-service/uaa/user
+#    client:
+#      clientId: LITSystem
+#      clientSecret: LITSecret
+#      accessTokenUri: http://localhost:8080/uaa/oauth/token
+#      grant-type: client_credentials
+#      scope: system
