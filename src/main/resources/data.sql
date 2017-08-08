@@ -1,1 +1,1 @@
-insert into ACCOUNT (id, user_id, account_number, address) values (1, 1, 'abc123', '23 Crestwood Dr., Cambridge, ON, Canada');
+insert into LCBO_ORDER (id, account_id, total) values (1, 1, 1000000);

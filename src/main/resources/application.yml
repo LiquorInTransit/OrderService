@@ -4,13 +4,17 @@ server:
  #   contextPath: /accounts
  # use-forward-headers: false
 
+logging:
+  level:
+    org:
+      springframework: #DEBUG
 
 spring:
   profiles:
     active: test
   datasource:
     name: test
-    url: jdbc:hsqldb:mem:test://localhost/test
+    url: jdbc:hsqldb:mem:test2://localhost/test2
     username:
     password: 
   jpa:
@@ -19,19 +23,35 @@ spring:
         dialect: org.hibernate.dialect.HSQLDialect
     hibernate:
       ddl-auto: none
+      
+security:
+  oauth2:
+    resource:
+      jwt:
+        key-value: |
+          -----BEGIN PUBLIC KEY-----
+          MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0DsrJige51wEhIDatvnq
+          zGlrb+HGZmUCB7UxxoP7m+humK6paRilkpKKXoJeiwrYz2Cx9dLG1Q0IxtOlxPU4
+          RsCjFw3N8hrmuw+R8Fn6d0wAXUFR3EjoyiNaGK++2RaTEsbzK1A1/ea6DKH1UuFB
+          +NL1BQacKtQH3mwe/7ot9uW1axKwb28cqxHBYwxIdK8gQumCrLdwd9d+ZFn6j+7z
+          9VszKolOnmkeo1bOFNGBJ2Vf4b6XQc/uukpSDmV2l2pLMQ/DVLWvU/cl9Wd7S8CQ
+          pIQiKzmnKlbvM18EVDZwb0vcXZenT5yGHZ3GHXEJDzChnRbQtQOjvUvKzPnoBzGx
+          7wIDAQAB
+          -----END PUBLIC KEY-----
+#      userInfoUri: http://localhost:5000/uaa/user
+    client:
+      client-id: LITSystem
+      client-secret: LITSystem
+      accessTokenUri: http://localhost:5000/uaa/oauth/token
+      grant-type: client_credentials
+      scope: system
 
 
 ---
   
-eureka:
-  instance:
-    hostname: localhost
-    port: 8761
-  client:
-    serviceUrl:
-      defaultZone: http://${eureka.instance.hostname}:${eureka.instance.port}/eureka
-   
+
 spring:
+  profiles: prod
  # data:
   #  rest:
    #   basePath: /v1
@@ -59,3 +79,12 @@ security:
 #      accessTokenUri: http://localhost:8080/uaa/oauth/token
 #      grant-type: client_credentials
 #      scope: system
+
+eureka:
+  instance:
+    hostname: localhost
+    port: 8761
+  client:
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:${eureka.instance.port}/eureka
+   
