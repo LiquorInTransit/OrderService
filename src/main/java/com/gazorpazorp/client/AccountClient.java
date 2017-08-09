@@ -4,15 +4,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.cloud.netflix.feign.FeignClient;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name="account-client")
+@FeignClient(name="account-client", configuration = DefaultFeignConfiguration.class)
 public interface AccountClient {
 	
-	@GetMapping(value="/accounts/{id}", consumes = "application/json")
-	Map<String, Object> getAcct(@PathVariable("id") Long id);
-	
-	@GetMapping(value="/accounts/by_user_id/{id}", consumes="application/json")
-	List<Map<String, Object>> getAcctsByUserId(@PathVariable("id") Long id);
+	@GetMapping(value="/accounts/", consumes = "application/json")
+	List<Map<String, Object>> getAcct();
 }
+

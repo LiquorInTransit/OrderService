@@ -7,7 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.gazorpazorp.client.AccountClient;
-import com.gazorpazorp.client.TokenForwardAccountClient;
+import com.gazorpazorp.client.TokenRequestAccountClient;
 import com.gazorpazorp.model.Order;
 import com.gazorpazorp.repository.OrderRepository;
 
@@ -20,21 +20,21 @@ public class OrderService {
 	AccountClient accountClient;
 
 	@Autowired
-	TokenForwardAccountClient tknActClient;
+	TokenRequestAccountClient tknReqActClient;
 
 	public Order getOrderById(Long orderId) {
 
-		System.out.println("tokClient: " + tknActClient.getAcct().toString());
+		System.out.println("tokClient: " + accountClient.getAcct().toString());
 
 		Order order = orderRepository.findById(orderId).get();
 		System.out.println("order: " + order);
 		System.out.println("accountClient:" + accountClient);
-		System.out.println(accountClient.getAcct(order.getAccountId()));
+		//System.out.println(tknReqActClient.getAcct(order.getAccountId()));
 
-		Long accountUserId = Long.parseLong(accountClient.getAcct(order.getAccountId()).get("userId").toString());
+		Long accountUserId = Long.parseLong(accountClient.getAcct().get(0).get("userId").toString());//Long.parseLong(tknReqActClient.getAcct(order.getAccountId()).get("userId").toString());
 		if (!verifyUser(accountUserId))
 			return null;
-		
+		System.out.println("Account User Id: " + accountUserId);
 		
 		
 		order = createOrder(null);
@@ -58,7 +58,7 @@ public class OrderService {
 	//Option1, get userId here, then get Accounts by UserId (use the first account), then create the order using that id.
 	//!!NOTE!! I had to create a whole new endpoint on the account-service to make this option even viable...s
 	private Order createOrderOption1(List<Long> itemIds) {
-		Long accountId = Long.parseLong(accountClient.getAcctsByUserId(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).get(0).get("id").toString());
+		Long accountId = Long.parseLong(tknReqActClient.getAcctsByUserId(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).get(0).get("id").toString());
 		System.out.println("accountId v1: " + accountId);
 		Order order = new Order();
 		order.setId(new Long(2));
@@ -69,7 +69,7 @@ public class OrderService {
 	
 	//Option1, get account using forwardTokenAccountClient (use the first account), then create the order using that id.
 	private Order createOrderOption2(List<Long> itemIds) {
-		Long accountId = Long.parseLong(tknActClient.getAcct().get(0).get("id").toString());
+		Long accountId = Long.parseLong(accountClient.getAcct().get(0).get("id").toString());
 		System.out.println("accountId v2: " + accountId);
 		Order order = new Order();
 		order.setId(new Long(3));

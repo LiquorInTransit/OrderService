@@ -42,7 +42,7 @@ security:
     client:
       client-id: LITSystem
       client-secret: LITSystem
-      accessTokenUri: http://localhost:5000/uaa/oauth/token
+      access-token-uri: http://localhost:5000/uaa/oauth/token
       grant-type: client_credentials
       scope: system
 
