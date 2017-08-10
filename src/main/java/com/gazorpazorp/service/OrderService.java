@@ -24,7 +24,6 @@ public class OrderService {
 
 	public Order getOrderById(Long orderId) {
 
-		System.out.println("tokClient: " + accountClient.getAcct().toString());
 
 		Order order = orderRepository.findById(orderId).get();
 		System.out.println("order: " + order);
@@ -61,7 +60,7 @@ public class OrderService {
 		Long accountId = Long.parseLong(tknReqActClient.getAcctsByUserId(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).get(0).get("id").toString());
 		System.out.println("accountId v1: " + accountId);
 		Order order = new Order();
-		order.setId(new Long(2));
+//		order.setId(new Long(2));
 		order.setAccountId(accountId);
 		order.setTotal(100);
 		return order;
@@ -72,7 +71,7 @@ public class OrderService {
 		Long accountId = Long.parseLong(accountClient.getAcct().get(0).get("id").toString());
 		System.out.println("accountId v2: " + accountId);
 		Order order = new Order();
-		order.setId(new Long(3));
+//		order.setId(new Long(3));
 		order.setAccountId(accountId);
 		order.setTotal(100);
 		return order;
