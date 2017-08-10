@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@FeignClient(name="account-client", configuration = DefaultFeignConfiguration.class)
+@FeignClient(name="account-client"/*, configuration = DefaultFeignConfiguration.class*/)
 public interface AccountClient {
 	
 	@GetMapping(value="/accounts/", consumes = "application/json")
