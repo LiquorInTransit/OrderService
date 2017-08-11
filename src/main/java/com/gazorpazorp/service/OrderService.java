@@ -1,13 +1,16 @@
 package com.gazorpazorp.service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.gazorpazorp.client.AccountClient;
 import com.gazorpazorp.client.TokenRequestAccountClient;
+import com.gazorpazorp.model.Account;
+import com.gazorpazorp.model.LineItem;
 import com.gazorpazorp.model.Order;
 import com.gazorpazorp.repository.OrderRepository;
 
@@ -21,63 +24,65 @@ public class OrderService {
 
 	@Autowired
 	TokenRequestAccountClient tknReqActClient;
+	
+	public List<Order> getAllOrdersForAccount() {
+		Long accountId = accountClient.getAcct().get(0).getId();
+		
+		return orderRepository.findByAccountId(accountId);
+	}
 
 	public Order getOrderById(Long orderId) {
-
-
+		//Get the order
 		Order order = orderRepository.findById(orderId).get();
-		System.out.println("order: " + order);
-		System.out.println("accountClient:" + accountClient);
-		//System.out.println(tknReqActClient.getAcct(order.getAccountId()));
-
-		Long accountUserId = Long.parseLong(accountClient.getAcct().get(0).get("userId").toString());//Long.parseLong(tknReqActClient.getAcct(order.getAccountId()).get("userId").toString());
-		if (!verifyUser(accountUserId))
+		
+		//validate that the accountId of the order belongs to the user
+		try {
+			validateAccountId(order.getAccountId());
+		} catch (Exception e) {
+			System.out.println("FAILED VALIDATION");
 			return null;
-		System.out.println("Account User Id: " + accountUserId);
-		
-		
-		order = createOrder(null);
-		
+		}
 		
 		return order;
 	}
 	
-	public Order createOrder (List<Long> itemIds) {
-		Order order;
-		//Now we have 2 options for how to create Orders/
-		//Option1
-		order = createOrderOption1(itemIds);
-		//Option2
-		order = createOrderOption2(itemIds);
-		
-		order = orderRepository.save(order);
-		return order;
+	public List<Order> getCurrentOrder() {
+		Long accountId = accountClient.getAcct().get(0).getId();
+		return orderRepository.getCurrentOrderForAccount(accountId);
+	}
+	public boolean deleteCurrentOrder() {
+		Long accountId = accountClient.getAcct().get(0).getId();
+		List<Order> orders = orderRepository.getCurrentOrderForAccount(accountId);
+		if (orders.isEmpty())
+			return false;
+		orders.forEach(orderRepository::delete);
+		return true;
 	}
 	
-	//Option1, get userId here, then get Accounts by UserId (use the first account), then create the order using that id.
-	//!!NOTE!! I had to create a whole new endpoint on the account-service to make this option even viable...s
-	private Order createOrderOption1(List<Long> itemIds) {
-		Long accountId = Long.parseLong(tknReqActClient.getAcctsByUserId(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName())).get(0).get("id").toString());
-		System.out.println("accountId v1: " + accountId);
+	
+	public Order createOrder (List<LineItem> items) {
 		Order order = new Order();
-//		order.setId(new Long(2));
-		order.setAccountId(accountId);
-		order.setTotal(100);
-		return order;
+		order.setAccountId(accountClient.getAcct().get(0).getId());
+		order.setDeliveryLocation("SOME RANDOM LOCATION");
+		order.setStoreLocation("SOME RANDOM LOCATION");
+		order.setItems(new HashSet(items));
+		order.setTotal(125.25);
+		order.setStatus("picking_items");
+		return orderRepository.save(order);
 	}
 	
-	//Option1, get account using forwardTokenAccountClient (use the first account), then create the order using that id.
-	private Order createOrderOption2(List<Long> itemIds) {
-		Long accountId = Long.parseLong(accountClient.getAcct().get(0).get("id").toString());
-		System.out.println("accountId v2: " + accountId);
-		Order order = new Order();
-//		order.setId(new Long(3));
-		order.setAccountId(accountId);
-		order.setTotal(100);
-		return order;
-	}
 
-	private boolean verifyUser(Long userId) {
-		return Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName()) == userId;
+
+	private boolean validateAccountId(Long accountId) throws Exception {
+		List<Account> accounts = accountClient.getAcct();
+		
+		System.out.println(accountId);
+		if (accounts != null &&
+				!accounts
+				.stream()
+				.anyMatch(acct -> Objects.equals(acct.getId(), accountId))) {
+			throw new Exception ("Account number not valid");
+		}
+		return true;
 	}
 }

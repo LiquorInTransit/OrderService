@@ -1,9 +1,14 @@
 package com.gazorpazorp.model;
 
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -13,23 +18,18 @@ import org.hibernate.annotations.GenericGenerator;
 public class Order {
 
 	private Long id;
-//	private String id;
-	private Long accountId;	
-//	private String accountId;
+	private Long accountId;		
+	
+	private String deliveryLocation;
+	private String storeLocation;
 	private double total;
+	private String status;
+	
+	private Set<LineItem> items;
 	
 	public Order() {}
 
-//	@Id
-//	@Column(columnDefinition = "BINARY(16)")
-//	@GeneratedValue(generator = "uuid2")
-//	@GenericGenerator(name = "uuid2", strategy = "uuid2")
-//	public String getId() {
-//		return id;
-//	}
-//	public void setId(String id) {
-//		this.id = id;
-//	}
+
 	
 	@Id
 	@GenericGenerator(name = "incrementGenerator", strategy = "org.hibernate.id.IncrementGenerator")
@@ -41,14 +41,6 @@ public class Order {
 		this.id = id;
 	}
 	
-//	@Column(columnDefinition = "BINARY(16)")
-//	public String getAccountId() {
-//		return id;
-//	}
-//	public void setAccountId(String accountId) {
-//		this.accountId = accountId;
-//	}
-
 	@Column(name="account_id")
 	public Long getAccountId() {
 		return accountId;
@@ -63,6 +55,38 @@ public class Order {
 	}
 	public void setTotal(double total) {
 		this.total = total;
+	}
+
+	@Column(name="delivery_location")
+	public String getDeliveryLocation() {
+		return deliveryLocation;
+	}
+	public void setDeliveryLocation(String deliveryLocation) {
+		this.deliveryLocation = deliveryLocation;
+	}
+
+	@Column(name="store_location")
+	public String getStoreLocation() {
+		return storeLocation;
+	}
+	public void setStoreLocation(String storeLocation) {
+		this.storeLocation = storeLocation;
+	}
+
+	@Column(name="status")
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "order", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	public Set<LineItem> getItems() {
+		return items;
+	}
+	public void setItems(Set<LineItem> items) {
+		this.items = items;
 	}
 	
 	

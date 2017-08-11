@@ -8,14 +8,14 @@ eureka:
     
 account-client:
   ribbon:
-    listOfServers: http://localhost:55699
+    listOfServers: http://localhost:50548
     connectionTimeout: 5000
     readTimeout: 5000
     isSecure: false
     
 token-account-client:
   ribbon:
-    listOfServers: http://localhost:55699
+    listOfServers: http://localhost:50548
     connectionTimeout: 5000
     readTimeout: 5000
     isSecure: false
