@@ -1,4 +1,4 @@
-package com.gazorpazorp.client;
+package com.gazorpazorp.client.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.gazorpazorp.client.AccountClient;
@@ -26,8 +27,9 @@ public class OrderService {
 	TokenRequestAccountClient tknReqActClient;
 	
 	public List<Order> getAllOrdersForAccount() {
-		Long accountId = accountClient.getAcct().get(0).getId();
-		
+		Long accountId = accountClient.getAcct().getId();
+		Account account = tknReqActClient.getAcct(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName().toString()));
+		System.out.println("HERE IS THE TKN REQ ACCOUNT: " + account);
 		return orderRepository.findByAccountId(accountId);
 	}
 
@@ -47,11 +49,11 @@ public class OrderService {
 	}
 	
 	public List<Order> getCurrentOrder() {
-		Long accountId = accountClient.getAcct().get(0).getId();
+		Long accountId = accountClient.getAcct().getId();
 		return orderRepository.getCurrentOrderForAccount(accountId);
 	}
 	public boolean deleteCurrentOrder() {
-		Long accountId = accountClient.getAcct().get(0).getId();
+		Long accountId = accountClient.getAcct().getId();
 		List<Order> orders = orderRepository.getCurrentOrderForAccount(accountId);
 		if (orders.isEmpty())
 			return false;
@@ -62,7 +64,7 @@ public class OrderService {
 	
 	public Order createOrder (List<LineItem> items) {
 		Order order = new Order();
-		order.setAccountId(accountClient.getAcct().get(0).getId());
+		order.setAccountId(accountClient.getAcct().getId());
 		order.setDeliveryLocation("SOME RANDOM LOCATION");
 		order.setStoreLocation("SOME RANDOM LOCATION");
 		order.setItems(new HashSet(items));
@@ -74,13 +76,10 @@ public class OrderService {
 
 
 	private boolean validateAccountId(Long accountId) throws Exception {
-		List<Account> accounts = accountClient.getAcct();
+		Account account = accountClient.getAcct();
 		
 		System.out.println(accountId);
-		if (accounts != null &&
-				!accounts
-				.stream()
-				.anyMatch(acct -> Objects.equals(acct.getId(), accountId))) {
+		if (account != null && account.getId() != accountId) {
 			throw new Exception ("Account number not valid");
 		}
 		return true;

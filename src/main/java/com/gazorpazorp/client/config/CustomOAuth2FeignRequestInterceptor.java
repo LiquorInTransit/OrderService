@@ -1,4 +1,4 @@
-package com.gazorpazorp.client;
+package com.gazorpazorp.client.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
