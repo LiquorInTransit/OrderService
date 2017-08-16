@@ -25,6 +25,8 @@ spring:
       ddl-auto: none
       
 security:
+  basic:
+    enabled: false
   oauth2:
     resource:
       jwt:

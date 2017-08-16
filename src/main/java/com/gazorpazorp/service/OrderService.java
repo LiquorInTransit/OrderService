@@ -3,7 +3,10 @@ package com.gazorpazorp.service;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -13,6 +16,8 @@ import com.gazorpazorp.client.TokenRequestAccountClient;
 import com.gazorpazorp.model.Account;
 import com.gazorpazorp.model.LineItem;
 import com.gazorpazorp.model.Order;
+import com.gazorpazorp.model.dto.OrderMinimalDto;
+import com.gazorpazorp.model.dtoMapper.OrderMapper;
 import com.gazorpazorp.repository.OrderRepository;
 
 @Service
@@ -22,14 +27,10 @@ public class OrderService {
 	OrderRepository orderRepository;
 	@Autowired
 	AccountClient accountClient;
-
-	@Autowired
-	TokenRequestAccountClient tknReqActClient;
+	
 	
 	public List<Order> getAllOrdersForAccount() {
 		Long accountId = accountClient.getAcct().getId();
-		Account account = tknReqActClient.getAcct(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName().toString()));
-		System.out.println("HERE IS THE TKN REQ ACCOUNT: " + account);
 		return orderRepository.findByAccountId(accountId);
 	}
 

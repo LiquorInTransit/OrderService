@@ -1,5 +1,6 @@
 package com.gazorpazorp.model;
 
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -26,6 +27,8 @@ public class Order {
 	private String status;
 	
 	private Set<LineItem> items;
+	
+	private Date orderDate;
 	
 	public Order() {}
 
@@ -88,6 +91,15 @@ public class Order {
 	public void setItems(Set<LineItem> items) {
 		this.items = items;
 	}
+
+	//TODO: column, update schema
+	public Date getOrderDate() {
+		return orderDate;
+	}
+	public void setOrderDate(Date orderDate) {
+		this.orderDate = orderDate;
+	}
+	
 	
 	
 }

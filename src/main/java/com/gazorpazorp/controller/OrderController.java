@@ -3,6 +3,7 @@ package com.gazorpazorp.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gazorpazorp.model.LineItem;
 import com.gazorpazorp.model.Order;
+import com.gazorpazorp.model.dto.OrderMinimalDto;
+import com.gazorpazorp.model.dtoMapper.OrderMapper;
 import com.gazorpazorp.repository.OrderRepository;
 import com.gazorpazorp.service.OrderService;
 
@@ -35,9 +38,13 @@ public class OrderController {
 	}
 	
 	@GetMapping("/orders")
-	public ResponseEntity<List<Order>> getAll() throws Exception{
+	public ResponseEntity<List<OrderMinimalDto>> getAll() throws Exception{
 		return Optional.ofNullable(orderService.getAllOrdersForAccount())
-				.map(o -> new ResponseEntity<List<Order>>(o, HttpStatus.OK))
+				.map(o -> new ResponseEntity<List<OrderMinimalDto>>
+						(o.stream()
+						.map(order -> OrderMapper.INSTANCE.orderToOrderMinimalDto(order))
+						.collect(Collectors.toList()), HttpStatus.OK)
+					)
 				.orElseThrow(() -> new Exception("Account does not exist"));
 	}
 	
