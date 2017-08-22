@@ -1,23 +1,16 @@
 package com.gazorpazorp.service;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
-import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.gazorpazorp.client.AccountClient;
-import com.gazorpazorp.client.TokenRequestAccountClient;
-import com.gazorpazorp.model.Account;
+import com.gazorpazorp.client.CustomerClient;
+import com.gazorpazorp.model.Customer;
 import com.gazorpazorp.model.LineItem;
 import com.gazorpazorp.model.Order;
-import com.gazorpazorp.model.dto.OrderMinimalDto;
-import com.gazorpazorp.model.dtoMapper.OrderMapper;
 import com.gazorpazorp.repository.OrderRepository;
 
 @Service
@@ -26,12 +19,12 @@ public class OrderService {
 	@Autowired
 	OrderRepository orderRepository;
 	@Autowired
-	AccountClient accountClient;
+	CustomerClient customerClient;
 	
 	
-	public List<Order> getAllOrdersForAccount() {
-		Long accountId = accountClient.getAcct().getId();
-		return orderRepository.findByAccountId(accountId);
+	public List<Order> getAllOrdersForCustomer() {
+		Long customerId = customerClient.getAcct().getId();
+		return orderRepository.findByCustomerId(customerId);
 	}
 
 	public Order getOrderById(Long orderId) {
@@ -40,7 +33,7 @@ public class OrderService {
 		
 		//validate that the accountId of the order belongs to the user
 		try {
-			validateAccountId(order.getAccountId());
+			validateCustomerId(order.getCustomerId());
 		} catch (Exception e) {
 			System.out.println("FAILED VALIDATION");
 			return null;
@@ -49,38 +42,41 @@ public class OrderService {
 		return order;
 	}
 	
-	public List<Order> getCurrentOrder() {
-		Long accountId = accountClient.getAcct().getId();
-		return orderRepository.getCurrentOrderForAccount(accountId);
+	public Order getCurrentOrder() {
+		Long accountId = customerClient.getAcct().getId();
+		return orderRepository.findCurrentOrderForCustomer(accountId);
 	}
 	public boolean deleteCurrentOrder() {
-		Long accountId = accountClient.getAcct().getId();
-		List<Order> orders = orderRepository.getCurrentOrderForAccount(accountId);
-		if (orders.isEmpty())
+		Long accountId = customerClient.getAcct().getId();
+		Order order = orderRepository.findCurrentOrderForCustomer(accountId);
+		if (order == null)
 			return false;
-		orders.forEach(orderRepository::delete);
+		orderRepository.delete(order);
 		return true;
 	}
 	
 	
 	public Order createOrder (List<LineItem> items) {
+		Long acctId = customerClient.getAcct().getId();
+		System.out.println(orderRepository.findCurrentOrderForCustomer(acctId));
 		Order order = new Order();
-		order.setAccountId(accountClient.getAcct().getId());
+		order.setCustomerId(acctId);
 		order.setDeliveryLocation("SOME RANDOM LOCATION");
 		order.setStoreLocation("SOME RANDOM LOCATION");
 		order.setItems(new HashSet(items));
 		order.setTotal(125.25);
 		order.setStatus("picking_items");
+		order.setOrderDate(new Date());
 		return orderRepository.save(order);
 	}
 	
 
 
-	private boolean validateAccountId(Long accountId) throws Exception {
-		Account account = accountClient.getAcct();
+	private boolean validateCustomerId(Long customerId) throws Exception {
+		Customer customer = customerClient.getAcct();
 		
-		System.out.println(accountId);
-		if (account != null && account.getId() != accountId) {
+		System.out.println(customerId);
+		if (customer != null && customer.getId() != customerId) {
 			throw new Exception ("Account number not valid");
 		}
 		return true;

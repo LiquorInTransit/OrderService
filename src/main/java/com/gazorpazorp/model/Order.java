@@ -19,7 +19,7 @@ import org.hibernate.annotations.GenericGenerator;
 public class Order {
 
 	private Long id;
-	private Long accountId;		
+	private Long customerId;		
 	
 	private String deliveryLocation;
 	private String storeLocation;
@@ -44,12 +44,12 @@ public class Order {
 		this.id = id;
 	}
 	
-	@Column(name="account_id")
-	public Long getAccountId() {
-		return accountId;
+	@Column(name="customer_id")
+	public Long getCustomerId() {
+		return customerId;
 	}
-	public void setAccountId(Long accountId) {
-		this.accountId = accountId;
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
 	}
 
 	@Column(name="total")
@@ -93,6 +93,7 @@ public class Order {
 	}
 
 	//TODO: column, update schema
+	@Column(name = "order_date")
 	public Date getOrderDate() {
 		return orderDate;
 	}

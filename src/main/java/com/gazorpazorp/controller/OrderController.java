@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gazorpazorp.model.LineItem;
@@ -22,6 +23,7 @@ import com.gazorpazorp.repository.OrderRepository;
 import com.gazorpazorp.service.OrderService;
 
 @RestController
+@RequestMapping("/orders")
 public class OrderController {
 	
 	@Autowired
@@ -30,16 +32,16 @@ public class OrderController {
 	@Autowired
 	OrderRepository orderRepository;
 	
-	@PostMapping("/orders")
+	@PostMapping
 	public ResponseEntity<Order> createOrder (ArrayList<LineItem> items) throws Exception {
 		return Optional.ofNullable(orderService.createOrder(items))
 				.map(o -> new ResponseEntity<Order>(o, HttpStatus.OK))
 				.orElseThrow(() -> new Exception("Could not create order!"));
 	}
 	
-	@GetMapping("/orders")
+	@GetMapping
 	public ResponseEntity<List<OrderMinimalDto>> getAll() throws Exception{
-		return Optional.ofNullable(orderService.getAllOrdersForAccount())
+		return Optional.ofNullable(orderService.getAllOrdersForCustomer())
 				.map(o -> new ResponseEntity<List<OrderMinimalDto>>
 						(o.stream()
 						.map(order -> OrderMapper.INSTANCE.orderToOrderMinimalDto(order))
@@ -48,21 +50,21 @@ public class OrderController {
 				.orElseThrow(() -> new Exception("Account does not exist"));
 	}
 	
-	@GetMapping("/orders/{orderId}")
+	@GetMapping("/{orderId}")
 	public ResponseEntity getOrderById (@PathVariable Long orderId) throws Exception {
 		return Optional.ofNullable(orderService.getOrderById(orderId))
 				.map(o -> new ResponseEntity<Order>(o, HttpStatus.OK))
 				.orElseThrow(() -> new Exception("Account does not exist"));
 	}
 	
-	@GetMapping("/orders/current")
-	public ResponseEntity<List<Order>> getCurrentOrder () throws Exception {
+	@GetMapping("/current")
+	public ResponseEntity<Order> getCurrentOrder () throws Exception {
 		return Optional.ofNullable(orderService.getCurrentOrder())
-				.map(o -> new ResponseEntity<List<Order>>(o, HttpStatus.OK))
+				.map(o -> new ResponseEntity<Order>(o, HttpStatus.OK))
 				.orElseThrow(() -> new Exception("No Current Order"));
 	}
 	
-	@DeleteMapping("/orders/current")
+	@DeleteMapping("/current")
 	public ResponseEntity deleteCurrentOrder () throws Exception {
 		orderService.deleteCurrentOrder();
 		return new ResponseEntity(null, HttpStatus.NO_CONTENT);

@@ -1,6 +1,6 @@
 package com.gazorpazorp.model;
 
-public class Account {
+public class Customer {
 	private Long id;
 	
 	public Long getId() {

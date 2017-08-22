@@ -10,8 +10,8 @@ import com.gazorpazorp.model.Order;
 
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
-	public List<Order> findByAccountId(@Param("accountId") Long accountId);
+	public List<Order> findByCustomerId(@Param("customerId") Long customerId);
 	
-	@Query("select o from Order o where o.accountId = ?1 and status != 'complete'")
-	public List<Order> getCurrentOrderForAccount(Long accountId);
+	@Query("select o from Order o where o.customerId = ?1 and status != 'complete'")
+	public Order findCurrentOrderForCustomer(Long customerId);
 }
