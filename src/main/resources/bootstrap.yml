@@ -6,7 +6,7 @@ eureka:
   instance:
     instanceId: ${spring.application.name}:${random.string}
     
-customer-client:
+account-client:
   ribbon:
     listOfServers: http://localhost:8001
     connectionTimeout: 5000

@@ -56,11 +56,13 @@ public class OrderService {
 	}
 	
 	
-	public Order createOrder (List<LineItem> items) {
-		Long acctId = customerClient.getAcct().getId();
-		System.out.println(orderRepository.findCurrentOrderForCustomer(acctId));
+	public Order createOrder (List<LineItem> items) throws Exception {
+		Long customerId = customerClient.getAcct().getId();
+		if (orderRepository.findCurrentOrderForCustomer(customerId) != null) {
+			throw new Exception ("Customer already has an active order");
+		}
 		Order order = new Order();
-		order.setCustomerId(acctId);
+		order.setCustomerId(customerId);
 		order.setDeliveryLocation("SOME RANDOM LOCATION");
 		order.setStoreLocation("SOME RANDOM LOCATION");
 		order.setItems(new HashSet(items));

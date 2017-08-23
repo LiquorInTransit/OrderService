@@ -5,10 +5,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import com.gazorpazorp.model.Customer;
 
-@FeignClient(name="customer-client")
+@FeignClient(name="account-client")
 public interface CustomerClient {
 	
-	@GetMapping(value="/customers/", consumes = "application/json")
+	@GetMapping(value="/me", consumes = "application/json")
 	Customer getAcct();
 }
 
