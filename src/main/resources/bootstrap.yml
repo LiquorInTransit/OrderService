@@ -6,16 +6,16 @@ eureka:
   instance:
     instanceId: ${spring.application.name}:${random.string}
     
-account-client:
-  ribbon:
-    listOfServers: http://localhost:8001
-    connectionTimeout: 5000
-    readTimeout: 5000
-    isSecure: false
+#account-client:
+#  ribbon:
+#    listOfServers: http://localhost:8001
+#    connectionTimeout: 5000
+#    readTimeout: 5000
+#    isSecure: false
     
-token-account-client:
-  ribbon:
-    listOfServers: http://localhost:52873
-    connectionTimeout: 5000
-    readTimeout: 5000
-    isSecure: false
+#token-account-client:
+#  ribbon:
+#    listOfServers: http://localhost:52873
+#    connectionTimeout: 5000
+#    readTimeout: 5000
+#    isSecure: false

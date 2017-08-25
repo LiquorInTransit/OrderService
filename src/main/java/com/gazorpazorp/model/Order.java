@@ -92,7 +92,6 @@ public class Order {
 		this.items = items;
 	}
 
-	//TODO: column, update schema
 	@Column(name = "order_date")
 	public Date getOrderDate() {
 		return orderDate;

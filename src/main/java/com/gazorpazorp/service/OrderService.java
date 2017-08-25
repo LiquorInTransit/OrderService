@@ -7,7 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.gazorpazorp.client.CustomerClient;
+import com.gazorpazorp.client.AccountClient;
 import com.gazorpazorp.model.Customer;
 import com.gazorpazorp.model.LineItem;
 import com.gazorpazorp.model.Order;
@@ -19,11 +19,12 @@ public class OrderService {
 	@Autowired
 	OrderRepository orderRepository;
 	@Autowired
-	CustomerClient customerClient;
+	AccountClient accountClient;
 	
 	
 	public List<Order> getAllOrdersForCustomer() {
-		Long customerId = customerClient.getAcct().getId();
+		Long customerId = accountClient.getAcct().getId();
+		System.out.println("Customer Id: " + customerId);
 		return orderRepository.findByCustomerId(customerId);
 	}
 
@@ -43,11 +44,11 @@ public class OrderService {
 	}
 	
 	public Order getCurrentOrder() {
-		Long accountId = customerClient.getAcct().getId();
+		Long accountId = accountClient.getAcct().getId();
 		return orderRepository.findCurrentOrderForCustomer(accountId);
 	}
 	public boolean deleteCurrentOrder() {
-		Long accountId = customerClient.getAcct().getId();
+		Long accountId = accountClient.getAcct().getId();
 		Order order = orderRepository.findCurrentOrderForCustomer(accountId);
 		if (order == null)
 			return false;
@@ -57,7 +58,7 @@ public class OrderService {
 	
 	
 	public Order createOrder (List<LineItem> items) throws Exception {
-		Long customerId = customerClient.getAcct().getId();
+		Long customerId = accountClient.getAcct().getId();
 		if (orderRepository.findCurrentOrderForCustomer(customerId) != null) {
 			throw new Exception ("Customer already has an active order");
 		}
@@ -75,7 +76,7 @@ public class OrderService {
 
 
 	private boolean validateCustomerId(Long customerId) throws Exception {
-		Customer customer = customerClient.getAcct();
+		Customer customer = accountClient.getAcct();
 		
 		System.out.println(customerId);
 		if (customer != null && customer.getId() != customerId) {
