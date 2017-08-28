@@ -6,6 +6,7 @@ server:
  
 
 logging:
+  file: log.log
   level:
     org:
       springframework: #DEBUG
@@ -52,9 +53,26 @@ eureka:
   instance:
     hostname: localhost
     port: 8761
+    healthCheckUrlPath: ${management.contextPath}/health
+    metadata-map:
+      management.context-path: "${management.contextPath}"
   client:
     serviceUrl:
       defaultZone: http://${eureka.instance.hostname}:${eureka.instance.port}/eureka
+      
+management:
+  contextPath: /mgmt
+  security:
+    enabled: false
+    
+endpoints:
+  enabled: false
+  health.enabled: true
+  info.enabled: true
+  logfile.enabled: true
+  loggers.enabled: true
+  metrics.enabled: true
+  trace.enabled: true
 
 
 ---
