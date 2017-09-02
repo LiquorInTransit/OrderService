@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +34,7 @@ public class OrderController {
 	OrderRepository orderRepository;
 	
 	@PostMapping
+	@PreAuthorize("#oauth2.hasScope('orders')")
 	public ResponseEntity<Order> createOrder (ArrayList<LineItem> items) throws Exception {
 		return Optional.ofNullable(orderService.createOrder(items))
 				.map(o -> new ResponseEntity<Order>(o, HttpStatus.OK))
@@ -40,6 +42,7 @@ public class OrderController {
 	}
 	
 	@GetMapping
+	@PreAuthorize("#oauth2.hasScope('orders')")
 	public ResponseEntity<List<OrderMinimalDto>> getAll() throws Exception{
 		return Optional.ofNullable(orderService.getAllOrdersForCustomer())
 				.map(o -> new ResponseEntity<List<OrderMinimalDto>>
@@ -51,6 +54,7 @@ public class OrderController {
 	}
 	
 	@GetMapping("/{orderId}")
+	@PreAuthorize("#oauth2.hasScope('orders')")
 	public ResponseEntity getOrderById (@PathVariable Long orderId) throws Exception {
 		return Optional.ofNullable(orderService.getOrderById(orderId))
 				.map(o -> new ResponseEntity<Order>(o, HttpStatus.OK))
@@ -58,6 +62,7 @@ public class OrderController {
 	}
 	
 	@GetMapping("/current")
+	@PreAuthorize("#oauth2.hasScope('orders')")
 	public ResponseEntity<Order> getCurrentOrder () throws Exception {
 		return Optional.ofNullable(orderService.getCurrentOrder())
 				.map(o -> new ResponseEntity<Order>(o, HttpStatus.OK))
@@ -65,6 +70,7 @@ public class OrderController {
 	}
 	
 	@DeleteMapping("/current")
+	@PreAuthorize("#oauth2.hasScope('orders')")
 	public ResponseEntity deleteCurrentOrder () throws Exception {
 		orderService.deleteCurrentOrder();
 		return new ResponseEntity(null, HttpStatus.NO_CONTENT);
