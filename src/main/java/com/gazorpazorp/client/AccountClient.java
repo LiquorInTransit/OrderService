@@ -9,6 +9,6 @@ import com.gazorpazorp.model.Customer;
 public interface AccountClient {
 	
 	@GetMapping(value="/me", consumes = "application/json")
-	Customer getAcct();
+	Customer getCustomer();
 }
 

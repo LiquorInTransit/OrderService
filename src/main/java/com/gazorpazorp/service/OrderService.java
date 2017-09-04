@@ -23,8 +23,7 @@ public class OrderService {
 	
 	
 	public List<Order> getAllOrdersForCustomer() {
-		Long customerId = accountClient.getAcct().getId();
-		System.out.println("Customer Id: " + customerId);
+		Long customerId = accountClient.getCustomer().getId();
 		return orderRepository.findByCustomerId(customerId);
 	}
 
@@ -44,11 +43,11 @@ public class OrderService {
 	}
 	
 	public Order getCurrentOrder() {
-		Long accountId = accountClient.getAcct().getId();
+		Long accountId = accountClient.getCustomer().getId();
 		return orderRepository.findCurrentOrderForCustomer(accountId);
 	}
 	public boolean deleteCurrentOrder() {
-		Long accountId = accountClient.getAcct().getId();
+		Long accountId = accountClient.getCustomer().getId();
 		Order order = orderRepository.findCurrentOrderForCustomer(accountId);
 		if (order == null)
 			return false;
@@ -58,7 +57,7 @@ public class OrderService {
 	
 	
 	public Order createOrder (List<LineItem> items) throws Exception {
-		Long customerId = accountClient.getAcct().getId();
+		Long customerId = accountClient.getCustomer().getId();
 		if (orderRepository.findCurrentOrderForCustomer(customerId) != null) {
 			throw new Exception ("Customer already has an active order");
 		}
@@ -76,9 +75,8 @@ public class OrderService {
 
 
 	private boolean validateCustomerId(Long customerId) throws Exception {
-		Customer customer = accountClient.getAcct();
+		Customer customer = accountClient.getCustomer();
 		
-		System.out.println(customerId);
 		if (customer != null && customer.getId() != customerId) {
 			throw new Exception ("Account number not valid");
 		}
