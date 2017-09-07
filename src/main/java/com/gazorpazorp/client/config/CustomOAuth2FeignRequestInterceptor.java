@@ -2,7 +2,9 @@ package com.gazorpazorp.client.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
+import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
@@ -27,11 +29,17 @@ public class CustomOAuth2FeignRequestInterceptor implements RequestInterceptor{
 
     @Override
     public void apply(RequestTemplate template) {
-        if ( oAuth2ClientContext.getAccessToken() == null) {
+    	String authenticationString = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+    	String tokenString = ((OAuth2AuthenticationDetails)SecurityContextHolder.getContext().getAuthentication().getDetails()).getTokenValue();
+    	System.out.println("The security context contains some shit. So here's the token and its decoded content: \n\t"
+        		+ tokenString + "\n\t" + authenticationString);
+    	if (tokenString == null) {
             logger.warn("Cannot obtain existing token for request, if it is a non secured request, ignore.");
+//            System.out.println("However, the security context contains some shit. So here's the token and its decoded content: \n\t"
+//            		+ tokenString + "\n\t" + authenticationString);
         } else {
             logger.debug("Constructing Header {} for Token {}", headerName, tokenTypeName);
-            template.header(headerName, String.format("%s %s", tokenTypeName, oAuth2ClientContext.getAccessToken().toString()));
+            template.header(headerName, String.format("%s %s", tokenTypeName, tokenString));
         }
 
     }
