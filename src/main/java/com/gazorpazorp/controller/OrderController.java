@@ -58,7 +58,7 @@ public class OrderController {
 	public ResponseEntity getOrderById (@PathVariable Long orderId) throws Exception {
 		return Optional.ofNullable(orderService.getOrderById(orderId))
 				.map(o -> new ResponseEntity<Order>(o, HttpStatus.OK))
-				.orElseThrow(() -> new Exception("Account does not exist"));
+				.orElseThrow(() -> new Exception("Customer not authorized to view this order"));//TODO: Change this back to 'Account does not exist' when the other TODO in the service is updated
 	}
 	
 	@GetMapping("/current")

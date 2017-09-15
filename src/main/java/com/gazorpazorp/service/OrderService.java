@@ -38,6 +38,7 @@ public class OrderService {
 		try {
 			validateCustomerId(order.getCustomerId());
 		} catch (Exception e) {
+			//TODO: Make this throw an exception so that feign can say that you're not authorized to look at these orders
 			logger.error("FAILED VALIDATION");
 			return null;
 		}
