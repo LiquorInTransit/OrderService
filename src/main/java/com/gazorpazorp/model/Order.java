@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
@@ -28,6 +29,7 @@ public class Order {
 	
 	private Set<LineItem> items;
 	
+	@CreationTimestamp
 	private Date orderDate;
 	
 	public Order() {}

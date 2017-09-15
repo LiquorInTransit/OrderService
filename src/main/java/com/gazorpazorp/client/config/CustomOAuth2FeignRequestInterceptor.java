@@ -29,14 +29,9 @@ public class CustomOAuth2FeignRequestInterceptor implements RequestInterceptor{
 
     @Override
     public void apply(RequestTemplate template) {
-    	String authenticationString = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
     	String tokenString = ((OAuth2AuthenticationDetails)SecurityContextHolder.getContext().getAuthentication().getDetails()).getTokenValue();
-    	System.out.println("The security context contains some shit. So here's the token and its decoded content: \n\t"
-        		+ tokenString + "\n\t" + authenticationString);
     	if (tokenString == null) {
             logger.warn("Cannot obtain existing token for request, if it is a non secured request, ignore.");
-//            System.out.println("However, the security context contains some shit. So here's the token and its decoded content: \n\t"
-//            		+ tokenString + "\n\t" + authenticationString);
         } else {
             logger.debug("Constructing Header {} for Token {}", headerName, tokenTypeName);
             template.header(headerName, String.format("%s %s", tokenTypeName, tokenString));

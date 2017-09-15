@@ -5,7 +5,7 @@ create table LCBO_ORDER (
 	store_location VARCHAR(60),
 	status VARCHAR(60),
 	total INTEGER,
-	order_date DATE
+	order_date DATETIME
 );
 
 create table LINE_ITEM (

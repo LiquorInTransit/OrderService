@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,7 @@ public class OrderService {
 	@Autowired
 	AccountClient accountClient;
 	
+	private final Logger logger = LoggerFactory.getLogger(OrderService.class);
 	
 	public List<Order> getAllOrdersForCustomer() {
 		Long customerId = accountClient.getCustomer().getId();
@@ -35,7 +38,7 @@ public class OrderService {
 		try {
 			validateCustomerId(order.getCustomerId());
 		} catch (Exception e) {
-			System.out.println("FAILED VALIDATION");
+			logger.error("FAILED VALIDATION");
 			return null;
 		}
 		
