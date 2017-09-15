@@ -24,7 +24,7 @@ import com.gazorpazorp.repository.OrderRepository;
 import com.gazorpazorp.service.OrderService;
 
 @RestController
-@RequestMapping("/orders")
+@RequestMapping("/api/orders")
 public class OrderController {
 	
 	@Autowired
