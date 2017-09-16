@@ -22,18 +22,15 @@
         region: "{{ region }}"
         rules_egress:
            - proto: tcp
-             from_port: 0
-             to_port: 65535
+             ports: 0-65535
              cidr_ip: 0.0.0.0/0
         rules:
            - proto: tcp
-             from_port: 8080
-             to_port: 8080
-             cidr_ip: 0.0.0.0/0
+             ports: 8080
+             cidr_ip: 172.31.0.0/16
            
            - proto: tcp
-             from_port: 22
-             to_port: 22
+             ports: 22
              cidr_ip: 0.0.0.0/0
 
     - name: Provision an instance
