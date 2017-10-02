@@ -1,6 +1,5 @@
 package com.gazorpazorp.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -13,7 +12,9 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gazorpazorp.model.LineItem;
@@ -33,9 +34,10 @@ public class OrderController {
 	@Autowired
 	OrderRepository orderRepository;
 	
+	//TODO: add functionality of use the quoteId
 	@PostMapping
 	@PreAuthorize("#oauth2.hasScope('orders')")
-	public ResponseEntity<Order> createOrder (ArrayList<LineItem> items) throws Exception {
+	public ResponseEntity<Order> createOrder (@RequestBody List<LineItem> items, @RequestParam("quote") Long quoteId) throws Exception {
 		return Optional.ofNullable(orderService.createOrder(items))
 				.map(o -> new ResponseEntity<Order>(o, HttpStatus.OK))
 				.orElseThrow(() -> new Exception("Could not create order!"));

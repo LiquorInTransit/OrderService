@@ -12,5 +12,7 @@ create table LINE_ITEM (
 	id INTEGER PRIMARY KEY,
 	order_id INTEGER,
 	product_id INTEGER,
+	product_name VARCHAR(255),
+	price DECIMAL,
 	qty INTEGER
 );

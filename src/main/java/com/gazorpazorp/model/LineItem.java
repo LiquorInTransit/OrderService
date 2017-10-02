@@ -19,6 +19,8 @@ public class LineItem {
 	private Long id;
 	private Order order;
 	private Long productId;
+	private String productName;
+	private double price;
 	private int qty;
 	
 	@Id
@@ -48,6 +50,22 @@ public class LineItem {
 	}
 	public void setProductId(Long productId) {
 		this.productId = productId;
+	}
+	
+	@Column(name="product_name")
+	public String getProductName() {
+		return productName;
+	}
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+	
+	@Column(name="price")
+	public double getPrice() {
+		return price;
+	}
+	public void setPrice(double price) {
+		this.price = price;
 	}
 	
 	@Column(name="qty")
