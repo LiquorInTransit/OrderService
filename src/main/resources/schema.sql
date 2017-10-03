@@ -13,6 +13,6 @@ create table LINE_ITEM (
 	order_id INTEGER,
 	product_id INTEGER,
 	product_name VARCHAR(255),
-	price DECIMAL,
+	price DECIMAL(6,2),
 	qty INTEGER
 );
