@@ -134,7 +134,6 @@
       user: admin
       password: admin
       force_basic_auth: yes
-    ignore_errors: yes
 
 #  - name: Deallocate the EIP
 #    ec2_eip:
