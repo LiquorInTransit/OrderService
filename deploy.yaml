@@ -134,7 +134,7 @@
     
   - name: Call shutdown endpoint of old green server
     uri:
-      url: http://"{{old_green.instances[0].public_ip}}":8080/mgmt/shutdown
+      url: http://"{{old_green.instances[0].public_ip_address}}":8080/mgmt/shutdown
       user: admin
       password: admin
       force_basic_auth: yes
