@@ -80,6 +80,9 @@ public class LineItem {
 
 	@Override
 	public String toString() {
-		return "LineItem [id=" + id + ", qty=" + qty + "]";
+		return "LineItem [id=" + id + ", order=" + order + ", productId=" + productId + ", productName=" + productName
+				+ ", price=" + price + ", qty=" + qty + "]\n";
 	}
+
+
 }
