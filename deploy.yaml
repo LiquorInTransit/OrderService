@@ -118,6 +118,8 @@
           instance-state-name: running
        region: "{{ region }}"
     register: new_server
+    
+  - debug: var=ec2_info
 
   - name: Get the id of the old, soon to be dead, green server
     ec2_remote_facts:
