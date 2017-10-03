@@ -138,6 +138,7 @@
       user: admin
       password: admin
       force_basic_auth: yes
+      method: POST
 
 #  - name: Deallocate the EIP
 #    ec2_eip:
