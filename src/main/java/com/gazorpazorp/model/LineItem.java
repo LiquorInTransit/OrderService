@@ -23,6 +23,8 @@ public class LineItem {
 	private double price;
 	private int qty;
 	
+	public LineItem() {}
+	
 	@Id
 	@JsonIgnore
 	@GenericGenerator(name = "incrementGenerator", strategy = "org.hibernate.id.IncrementGenerator")
