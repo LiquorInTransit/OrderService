@@ -1,8 +1,8 @@
 package com.gazorpazorp.service;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,11 +68,14 @@ public class OrderService {
 		if (orderRepository.findCurrentOrderForCustomer(customerId) != null) {
 			throw new Exception ("Customer already has an active order");
 		}
+		
 		Order order = new Order();
+		AtomicReference<Order> orderRef = new AtomicReference<>(order);
+		items.forEach(li -> li.setOrder(orderRef.get()));
 		order.setCustomerId(customerId);
 		order.setDeliveryLocation("SOME RANDOM LOCATION");
 		order.setStoreLocation("SOME RANDOM LOCATION");
-		order.setItems(new HashSet<LineItem>(items));
+	//	order.setItems(new HashSet<LineItem>(items));
 		order.setTotal(125.25);
 		order.setStatus("picking_items");
 		order.setOrderDate(new Date());
