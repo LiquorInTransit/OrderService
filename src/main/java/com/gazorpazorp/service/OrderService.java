@@ -13,6 +13,7 @@ import com.gazorpazorp.client.AccountClient;
 import com.gazorpazorp.model.Customer;
 import com.gazorpazorp.model.LineItem;
 import com.gazorpazorp.model.Order;
+import com.gazorpazorp.repository.LineItemRepository;
 import com.gazorpazorp.repository.OrderRepository;
 
 @Service
@@ -20,6 +21,8 @@ public class OrderService {
 
 	@Autowired
 	OrderRepository orderRepository;
+	@Autowired
+	LineItemRepository lineItemRepo;
 	@Autowired
 	AccountClient accountClient;
 	
@@ -69,11 +72,13 @@ public class OrderService {
 		order.setCustomerId(customerId);
 		order.setDeliveryLocation("SOME RANDOM LOCATION");
 		order.setStoreLocation("SOME RANDOM LOCATION");
-		order.setItems(new HashSet(items));
+		order.setItems(new HashSet<LineItem>(items));
 		order.setTotal(125.25);
 		order.setStatus("picking_items");
 		order.setOrderDate(new Date());
-		return orderRepository.save(order);
+		order = orderRepository.saveAndFlush(order);
+		logger.warn(lineItemRepo.findAll().toString());
+		return order;
 	}
 	
 
