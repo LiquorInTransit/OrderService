@@ -20,8 +20,8 @@ public class LineItem {
 	private Order order;
 	private Long productId;
 	private String productName;
-	private double price;
-	private int qty;
+	private Double price;
+	private Integer qty;
 	
 	public LineItem() {}
 	
@@ -63,18 +63,18 @@ public class LineItem {
 	}
 	
 	@Column(name="price")
-	public double getPrice() {
+	public Double getPrice() {
 		return price;
 	}
-	public void setPrice(double price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
 	
 	@Column(name="qty")
-	public int getQty() {
+	public Integer getQty() {
 		return qty;
 	}
-	public void setQty(int qty) {
+	public void setQty(Integer qty) {
 		this.qty = qty;
 	}
 
