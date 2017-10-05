@@ -74,7 +74,7 @@ public class OrderController {
 	@PreAuthorize("#oauth2.hasScope('orders')")
 	public ResponseEntity deleteCurrentOrder () throws Exception {
 		orderService.deleteCurrentOrder();
-		return new ResponseEntity(null, HttpStatus.NO_CONTENT);
+		return new ResponseEntity(null, HttpStatus.OK);
 	}
 
 	
