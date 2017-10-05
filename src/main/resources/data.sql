@@ -14,12 +14,12 @@ insert into LINE_ITEM (id, order_id, product_id, qty) values (16, 6, 1, 2), (17,
 
 insert into LCBO_ORDER (id, customer_id, total, status) values (7, 3, 1000000, 'complete');
 insert into LINE_ITEM (id, order_id, product_id, qty) values (19, 7, 1, 2), (20, 7, 2, 1), (21, 7, 3, 5);
-insert into LCBO_ORDER (id, customer_id, total, status) values (8, 3, 1000000, 'picking_items');
+insert into LCBO_ORDER (id, customer_id, total, status) values (8, 3, 1000000, 'complete');
 insert into LINE_ITEM (id, order_id, product_id, qty) values (22, 8, 1, 2), (23, 8, 2, 1), (24, 8, 3, 5);
 
 insert into LCBO_ORDER (id, customer_id, total, status) values (9, 4, 1000000, 'complete');
 insert into LINE_ITEM (id, order_id, product_id, qty) values (25, 9, 1, 2);
-insert into LCBO_ORDER (id, customer_id, total, status) values (10, 4, 1000000, 'on_delivery');
+insert into LCBO_ORDER (id, customer_id, total, status) values (10, 4, 1000000, 'complete');
 insert into LINE_ITEM (id, order_id, product_id, qty) values (26, 10, 1, 2), (27, 10, 2, 1);
 
 insert into LCBO_ORDER (id, customer_id, total, status) values (11, 5, 1000000, 'complete');
