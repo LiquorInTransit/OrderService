@@ -34,11 +34,10 @@ public class OrderController {
 	@Autowired
 	OrderRepository orderRepository;
 	
-	//TODO: add functionality of use the quoteId
 	@PostMapping
 	@PreAuthorize("#oauth2.hasScope('orders')")
 	public ResponseEntity<Order> createOrder (@RequestBody List<LineItem> items, @RequestParam("quote") Long quoteId) throws Exception {
-		return Optional.ofNullable(orderService.createOrder(items))
+		return Optional.ofNullable(orderService.createOrder(items, quoteId))
 				.map(o -> new ResponseEntity<Order>(o, HttpStatus.OK))
 				.orElseThrow(() -> new Exception("Could not create order!"));
 	}

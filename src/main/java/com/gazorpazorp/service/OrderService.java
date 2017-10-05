@@ -4,12 +4,16 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.gazorpazorp.client.AccountClient;
+import com.gazorpazorp.client.DeliveryClient;
 import com.gazorpazorp.model.Customer;
 import com.gazorpazorp.model.LineItem;
 import com.gazorpazorp.model.Order;
@@ -25,6 +29,8 @@ public class OrderService {
 	LineItemRepository lineItemRepo;
 	@Autowired
 	AccountClient accountClient;
+	@Autowired
+	DeliveryClient deliveryClient;
 	
 	private final Logger logger = LoggerFactory.getLogger(OrderService.class);
 	
@@ -45,42 +51,71 @@ public class OrderService {
 			logger.error("FAILED VALIDATION");
 			return null;
 		}
-		
+//		if (order==null)
+//			return null;
+//		order.setTrackingURL(deliveryClient.getDeliveryByOrderId(order.getId()).getBody().getTrackingURL());
 		return order;
 	}
 	
 	public Order getCurrentOrder() {
 		Long accountId = accountClient.getCustomer().getId();
-		return orderRepository.findCurrentOrderForCustomer(accountId);
+		Order order = orderRepository.findCurrentOrderForCustomer(accountId);
+		if (order==null)
+			return null;
+		order.setTrackingURL(deliveryClient.getDeliveryByOrderId(order.getId()).getBody().getTrackingURL());
+		return order;
 	}
-	public boolean deleteCurrentOrder() {
+	
+	@Transactional(rollbackOn= {Exception.class} )
+	public boolean deleteCurrentOrder() throws Exception {
 		Long accountId = accountClient.getCustomer().getId();
 		Order order = orderRepository.findCurrentOrderForCustomer(accountId);
 		if (order == null)
 			return false;
 		orderRepository.delete(order);
+		if (deliveryClient.deleteDeliveryByOrderId(order.getId()).getStatusCode() != HttpStatus.OK) {
+			logger.error("The delivery failed to delete");
+			throw new Exception("Failed to delete order. Try again later");
+		}
 		return true;
 	}
 	
 	
-	public Order createOrder (List<LineItem> items) throws Exception {
+	public Order createOrder (List<LineItem> items, Long quoteId) throws Exception {
 		Long customerId = accountClient.getCustomer().getId();
 		if (orderRepository.findCurrentOrderForCustomer(customerId) != null) {
 			throw new Exception ("Customer already has an active order");
 		}
 		
+
+	
+		
+		
 		Order order = new Order();
 		for (int x = 0; x<items.size(); x++)
 			items.get(x).setOrder(order);
 		order.setCustomerId(customerId);
-		order.setDeliveryLocation("SOME RANDOM LOCATION");
-		order.setStoreLocation("SOME RANDOM LOCATION");
+		//Remove delivery info
+//		order.setDeliveryLocation("SOME RANDOM LOCATION");
+//		order.setStoreLocation("SOME RANDOM LOCATION");
+		//Remove Delivery Info
 		order.setItems(new HashSet<LineItem>(items));
-		order.setTotal(125.25);
+		order.setTotal(items.stream().mapToDouble(LineItem::getPrice).sum());
 		order.setStatus("picking_items");
 		order.setOrderDate(new Date());
 		order = orderRepository.saveAndFlush(order);
-		logger.warn(lineItemRepo.findAll().toString());
+	//Create delivery from quote
+	//If something failed, then delete the order we just created, and return null;
+		String trackingURL = "";
+		try {
+			trackingURL = deliveryClient.createDelivery(quoteId, order.getId()).getBody();	
+		} catch (Exception e) {
+			//The delivery creation failed
+			orderRepository.deleteById(order.getId());
+			return null;
+		}
+		
+		order.setTrackingURL(trackingURL);
 		return order;
 	}
 	

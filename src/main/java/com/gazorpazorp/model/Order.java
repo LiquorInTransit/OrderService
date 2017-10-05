@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
@@ -22,8 +23,8 @@ public class Order {
 	private Long id;
 	private Long customerId;		
 	
-	private String deliveryLocation;
-	private String storeLocation;
+//	private String deliveryLocation;
+//	private String storeLocation;
 	private double total;
 	private String status;
 	
@@ -31,6 +32,8 @@ public class Order {
 	
 	@CreationTimestamp
 	private Date orderDate;
+	
+	private String trackingURL;
 	
 	public Order() {}
 
@@ -62,21 +65,21 @@ public class Order {
 		this.total = total;
 	}
 
-	@Column(name="delivery_location")
-	public String getDeliveryLocation() {
-		return deliveryLocation;
-	}
-	public void setDeliveryLocation(String deliveryLocation) {
-		this.deliveryLocation = deliveryLocation;
-	}
-
-	@Column(name="store_location")
-	public String getStoreLocation() {
-		return storeLocation;
-	}
-	public void setStoreLocation(String storeLocation) {
-		this.storeLocation = storeLocation;
-	}
+//	@Column(name="delivery_location")
+//	public String getDeliveryLocation() {
+//		return deliveryLocation;
+//	}
+//	public void setDeliveryLocation(String deliveryLocation) {
+//		this.deliveryLocation = deliveryLocation;
+//	}
+//
+//	@Column(name="store_location")
+//	public String getStoreLocation() {
+//		return storeLocation;
+//	}
+//	public void setStoreLocation(String storeLocation) {
+//		this.storeLocation = storeLocation;
+//	}
 
 	@Column(name="status")
 	public String getStatus() {
@@ -100,6 +103,14 @@ public class Order {
 	}
 	public void setOrderDate(Date orderDate) {
 		this.orderDate = orderDate;
+	}
+
+	@Transient
+	public String getTrackingURL() {
+		return trackingURL;
+	}
+	public void setTrackingURL(String trackingURL) {
+		this.trackingURL = trackingURL;
 	}
 	
 	
