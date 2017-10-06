@@ -20,6 +20,7 @@ public class LineItem {
 	private Order order;
 	private Long productId;
 	private String productName;
+	private String imageThumbUrl;
 	private Double price;
 	private Integer qty;
 	
@@ -62,6 +63,13 @@ public class LineItem {
 		this.productName = productName;
 	}
 	
+	public String getImageThumbUrl() {
+		return imageThumbUrl;
+	}
+	public void setImageThumbUrl(String imageThumbUrl) {
+		this.imageThumbUrl = imageThumbUrl;
+	}
+
 	@Column(name="price")
 	public Double getPrice() {
 		return price;
