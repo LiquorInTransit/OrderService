@@ -3,6 +3,7 @@ package com.gazorpazorp.service;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -36,20 +37,22 @@ public class OrderService {
 	
 	public List<Order> getAllOrdersForCustomer() {
 		Long customerId = accountClient.getCustomer().getId();
-		return orderRepository.findByCustomerId(customerId);
+		return orderRepository.findByCustomerId(customerId).stream().filter(o -> "complete".equals(o.getStatus())).collect(Collectors.toList());
 	}
 
-	public Order getOrderById(Long orderId) {
+	public Order getOrderById(Long orderId, boolean verify) {
 		//Get the order
 		Order order = orderRepository.findById(orderId).get();
 		
 		//validate that the accountId of the order belongs to the user
-		try {
-			validateCustomerId(order.getCustomerId());
-		} catch (Exception e) {
-			//TODO: Make this throw an exception so that feign can say that you're not authorized to look at these orders
-			logger.error("FAILED VALIDATION");
-			return null;
+		if (verify) {
+			try {
+				validateCustomerId(order.getCustomerId());
+			} catch (Exception e) {
+				//TODO: Make this throw an exception so that feign can say that you're not authorized to look at these orders
+				logger.error("FAILED VALIDATION");
+				return null;
+			}
 		}
 //		if (order==null)
 //			return null;
@@ -58,8 +61,8 @@ public class OrderService {
 	}
 	
 	public Order getCurrentOrder() {
-		Long accountId = accountClient.getCustomer().getId();
-		Order order = orderRepository.findCurrentOrderForCustomer(accountId);
+		Long customerId = accountClient.getCustomer().getId();
+		Order order = orderRepository.findCurrentOrderForCustomer(customerId);
 		if (order==null)
 			return null;
 		order.setTrackingURL(deliveryClient.getDeliveryByOrderId(order.getId()).getBody().getTrackingURL());
@@ -100,7 +103,7 @@ public class OrderService {
 //		order.setStoreLocation("SOME RANDOM LOCATION");
 		//Remove Delivery Info
 		order.setItems(new HashSet<LineItem>(items));
-		order.setTotal(items.stream().mapToDouble(LineItem::getPrice).sum());
+		order.setTotal(items.stream().mapToDouble(li -> li.getPrice()*(li.getQty()*1.0)).sum());
 		order.setStatus("picking_items");
 		order.setOrderDate(new Date());
 		order = orderRepository.saveAndFlush(order);

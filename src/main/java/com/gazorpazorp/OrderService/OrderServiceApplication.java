@@ -43,7 +43,7 @@ public class OrderServiceApplication {
 //	@PostConstruct
 //	public void getDbManager(){
 //	   DatabaseManagerSwing.main(
-//		new String[] { "--url", "jdbc:hsqldb:mem:test2://localhost/test2", "--user", "SA", "--password", ""});
+//		new String[] { "--url", "jdbc:hsqldb:mem:test://localhost/test?characterEncoding=UTF-8", "--user", "SA", "--password", ""});
 //	}
 
 	

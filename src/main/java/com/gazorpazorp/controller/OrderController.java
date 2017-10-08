@@ -1,5 +1,6 @@
 package com.gazorpazorp.controller;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -57,7 +58,7 @@ public class OrderController {
 	@GetMapping("/{orderId}")
 	@PreAuthorize("#oauth2.hasScope('orders')")
 	public ResponseEntity getOrderById (@PathVariable Long orderId) throws Exception {
-		return Optional.ofNullable(orderService.getOrderById(orderId))
+		return Optional.ofNullable(orderService.getOrderById(orderId, true))
 				.map(o -> new ResponseEntity<Order>(o, HttpStatus.OK))
 				.orElseThrow(() -> new Exception("Customer not authorized to view this order"));//TODO: Change this back to 'Account does not exist' when the other TODO in the service is updated
 	}

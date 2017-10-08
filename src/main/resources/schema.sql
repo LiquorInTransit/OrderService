@@ -11,7 +11,7 @@ create table LINE_ITEM (
 	order_id INTEGER,
 	product_id INTEGER,
 	product_name VARCHAR(255),
-	imageThumbUrl VARCHAR(300),
+	image_thumb_url VARCHAR(300),
 	price DECIMAL(6,2),
 	qty INTEGER
 );
