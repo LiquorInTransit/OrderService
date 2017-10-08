@@ -43,7 +43,7 @@ public class OrderController {
 				.orElseThrow(() -> new Exception("Could not create order!"));
 	}
 	
-	@GetMapping
+	@GetMapping("/history")
 	@PreAuthorize("#oauth2.hasScope('orders')")
 	public ResponseEntity<List<OrderMinimalDto>> getAll() throws Exception{
 		return Optional.ofNullable(orderService.getAllOrdersForCustomer())
