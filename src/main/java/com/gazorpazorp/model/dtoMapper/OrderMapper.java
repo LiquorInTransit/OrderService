@@ -16,7 +16,7 @@ public interface OrderMapper {
 	
 	@Mapping(target="id")
 	@Mapping(target="total")
-	@Mapping(target="orderDate")
+	@Mapping(target="createdAt")
 	@Mapping(target="status")
 	OrderMinimalDto orderToOrderMinimalDto(Order order);
 }

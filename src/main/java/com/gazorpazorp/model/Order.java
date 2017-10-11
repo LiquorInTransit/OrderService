@@ -1,5 +1,6 @@
 package com.gazorpazorp.model;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Set;
 
@@ -10,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -30,12 +32,17 @@ public class Order {
 	
 	private Set<LineItem> items;
 	
-	@CreationTimestamp
-	private Date orderDate;
+	
+	private Timestamp createdAt;
 	
 	private String trackingURL;
 	
 	public Order() {}
+	
+	@PrePersist
+	void onCreate() {
+		this.setCreatedAt(new Timestamp(new Date().getTime()));
+	}
 
 
 	
@@ -97,12 +104,12 @@ public class Order {
 		this.items = items;
 	}
 
-	@Column(name = "order_date")
-	public Date getOrderDate() {
-		return orderDate;
+	@Column(name = "created_at")
+	public Timestamp getCreatedAt() {
+		return createdAt;
 	}
-	public void setOrderDate(Date orderDate) {
-		this.orderDate = orderDate;
+	public void setCreatedAt(Timestamp createdAt) {
+		this.createdAt = createdAt;
 	}
 
 	@Transient

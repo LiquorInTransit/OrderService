@@ -12,9 +12,9 @@ insert into LINE_ITEM (id, order_id, product_id, qty) values (13, 5, 1, 2), (14,
 insert into LCBO_ORDER (id, customer_id, total, status) values (6, 2, 1000000, 'complete');
 insert into LINE_ITEM (id, order_id, product_id, qty) values (16, 6, 1, 2), (17, 6, 2, 1), (18, 6, 3, 5);
 
-insert into LCBO_ORDER (id, customer_id, total, status) values (7, 3, 1000000, 'complete');
+insert into LCBO_ORDER (id, customer_id, total, status, created_at) values (7, 3, 17.50, 'complete', '2017-10-10 21:11:23.539');
 insert into LINE_ITEM (id, order_id, product_id, qty) values (19, 7, 1, 2), (20, 7, 2, 1), (21, 7, 3, 5);
-insert into LCBO_ORDER (id, customer_id, total, status) values (8, 3, 1000000, 'complete');
+insert into LCBO_ORDER (id, customer_id, total, status, created_at) values (8, 3, 25.37, 'complete', '2017-10-05 21:11:23.539');
 insert into LINE_ITEM (id, order_id, product_id, qty) values (22, 8, 1, 2), (23, 8, 2, 1), (24, 8, 3, 5);
 
 insert into LCBO_ORDER (id, customer_id, total, status) values (9, 4, 1000000, 'complete');

@@ -1,11 +1,12 @@
 package com.gazorpazorp.model.dto;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class OrderMinimalDto {
 	private Long id;
 	private double total;
-	private Date orderDate;
+	private Timestamp createdAt;
 	private String status;
 	
 	
@@ -23,11 +24,11 @@ public class OrderMinimalDto {
 		this.total = total;
 	}
 	
-	public Date getOrderDate() {
-		return orderDate;
+	public Date getCreatedAt() {
+		return createdAt;
 	}
-	public void setOrderDate(Date orderDate) {
-		this.orderDate = orderDate;
+	public void setCreatedAt(Timestamp createdAt) {
+		this.createdAt = createdAt;
 	}
 	
 	public String getStatus() {

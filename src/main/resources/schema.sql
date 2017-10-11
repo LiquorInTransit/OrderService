@@ -3,7 +3,7 @@ create table LCBO_ORDER (
 	customer_id INTEGER,
 	status VARCHAR(60),
 	total INTEGER,
-	order_date DATETIME
+	created_at TIMESTAMP
 );
 
 create table LINE_ITEM (

@@ -105,7 +105,7 @@ public class OrderService {
 		order.setItems(new HashSet<LineItem>(items));
 		order.setTotal(items.stream().mapToDouble(li -> li.getPrice()*(li.getQty()*1.0)).sum());
 		order.setStatus("picking_items");
-		order.setOrderDate(new Date());
+//		order.setCreatedAt(new Date());
 		order = orderRepository.saveAndFlush(order);
 	//Create delivery from quote
 	//If something failed, then delete the order we just created, and return null;
