@@ -42,7 +42,7 @@ public class OrderService {
 
 	public Order getOrderById(Long orderId, boolean verify) {
 		//Get the order
-		Order order = orderRepository.findById(orderId).get();
+		Order order = orderRepository.findById(orderId).orElse(null);
 		
 		//validate that the accountId of the order belongs to the user
 		if (verify) {

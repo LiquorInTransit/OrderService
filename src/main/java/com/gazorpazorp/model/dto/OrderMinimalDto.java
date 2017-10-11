@@ -24,7 +24,7 @@ public class OrderMinimalDto {
 		this.total = total;
 	}
 	
-	public Date getCreatedAt() {
+	public Timestamp getCreatedAt() {
 		return createdAt;
 	}
 	public void setCreatedAt(Timestamp createdAt) {
